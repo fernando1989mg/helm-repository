@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullname }}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      role: poc-ms-gradle
+  template:
+    metadata:
+      labels:
+        role: poc-ms-gradle
+    spec:
+      containers:
+      - name: poc-ms-gradle
+        imagePullPolicy: Never
+        image: fernando1989mg/poc-ms-gradle:latest
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        ports:
+        - containerPort: 8080
